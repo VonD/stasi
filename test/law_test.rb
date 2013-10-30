@@ -28,7 +28,7 @@ class LawTest < ActiveSupport::TestCase
   test "it has statuses" do
     @law.status :admin do
     end
-    assert_equal ['admin'], @law.statuses
+    assert_equal [:admin], @law.statuses
   end
   
   test "it tests status on given object" do
@@ -76,7 +76,33 @@ class LawTest < ActiveSupport::TestCase
       status :admin do
       end
     end
-    assert_equal ['admin'], Robotnik::Authorization::Law.law.statuses
+    assert_equal [:admin], Robotnik::Authorization::Law.law.statuses
+  end
+  
+  test "it parses all stauses" do
+    object = Object.new
+    class << object
+      def is_a_a
+        true
+      end
+      def is_a_b
+        true
+      end
+    end
+    @law.status :is_a_a do
+      can :read, :post
+    end
+    @law.status :is_a_b do
+      cannot :read, :post
+    end
+    refute @law.can? object, :read, :post, nil
+  end
+  
+  test "it accepts defaults" do
+    @law.default do
+      can :read, :post
+    end
+    assert @law.can? Object.new, :read, :post, nil
   end
 
 end

@@ -24,26 +24,28 @@ You define permissions in an initializer :
 
 ```ruby
 Robotnik::Authorization::Law.define do
+
+  default do
+    can :read, :posts
+  end
   
   status :admin do
-    can read, :posts
+    can :edit, :posts
     can :destroy, :posts
   end
   
   status :guest do
-    can :read, :post
+    …
   end
   
 end
 ```
 
 Undefined permissions default to `false`.
-`:admin` and `:guest`, in this example, must be methods on the `user` object.
+`:admin` and `:guest`, in this example, must be method names on the `user` object. The only method name that is not allowed is `:default`, as `status :default` is equivalent to `default`.
 
 ## Milestones
 
-* define defaults
-* parse all the statuses so that you can override rules for an object belonging to different statuses
 * pass directly object, and not a symbol
 * pass symbol or proc to `:if` and `:unless` conditions
 * alias actions :manage, :all, :read => [:index, :show], :create => [:new, :create], …

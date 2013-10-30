@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name          = "stasi"
-  spec.version       = "0.0.1.alpha"
+  spec.version       = "0.1.0"
   spec.authors       = ["Paul Vonderscher"]
   spec.email         = ["paul.vonderscher@gmail.com"]
   spec.description   = %q{a small authorization library}
