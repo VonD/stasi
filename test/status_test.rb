@@ -3,6 +3,14 @@ require 'test_helper'
 class StatusTest < ActiveSupport::TestCase
   
   Book = Class.new
+  Book.class_eval do
+    def method_returning_true
+      true
+    end
+    def method_returning_false
+      false
+    end
+  end
   
   def setup
     @status = Robotnik::Authorization::Status.new
@@ -32,7 +40,7 @@ class StatusTest < ActiveSupport::TestCase
     assert_equal true, @status.instance_variable_get('@rules')[Book][:read]
   end
   
-  test "it defines authorization with if and unless options" do
+  test "it defines authorization with if and unless options and a Proc" do
     Post = Struct.new :name
     assertions = [true, false, false, true, false, true, false, false]
     [[true, nil], [nil, true], [false, nil], [nil, false], [true, true], [true, false], [false, true], [false, false]].each_with_index do |conditions, i|
@@ -48,6 +56,24 @@ class StatusTest < ActiveSupport::TestCase
       end
       @status.can :read, Post, conditions_hash
       assert_equal assertions[i], @status.can?(:read, Post.new('test'))
+    end
+  end
+  
+  test "it defines authorization with if and unless options and a symbol" do
+    assertions = [true, false, false, true, false, true, false, false]
+    [[true, nil], [nil, true], [false, nil], [nil, false], [true, true], [true, false], [false, true], [false, false]].each_with_index do |conditions, i|
+      conditions_hash = {}
+      [:if, :unless].each_with_index do |operator, j|
+        unless conditions[j].nil?
+          if conditions[j]
+            conditions_hash[operator] = :method_returning_true
+          else
+            conditions_hash[operator] = :method_returning_false
+          end
+        end
+      end
+      @status.can :read, Book, conditions_hash
+      assert_equal assertions[i], @status.can?(:read, Book.new)
     end
   end
   

@@ -56,7 +56,7 @@ When checking permission, you can pass an `:as` option to provide the right reso
 current_user.can? :read, Post.published, as: Post
 ```
 
-Optionnally, the `can` method can take a hash with conditions (hash keys can be `if` and `unless`, values can be Proc. The resource tested will be yielded).
+Optionnally, the `can` method can take a hash with conditions (hash keys can be `if` and `unless`, values can be Proc, or a symbol on which will be called `to_proc`. The resource tested will be yielded).
 Finally, the `can` method can take a block, in which case the `can?` method will return the return value of the block. This is useful when defining abilities on collections :
 
 ```ruby
@@ -69,8 +69,7 @@ The `cannot` method takes only two arguments : the action name, and the resource
 
 ## Milestones
 
-* pass a class option for collections
+* reload config in dev mode in rails
 * yield user to blocks and procs in defining abilities
-* pass symbol or proc to `:if` and `:unless` conditions
 * alias actions :manage, :all, :read => [:index, :show], :create => [:new, :create], …
 * load specific permissions from db

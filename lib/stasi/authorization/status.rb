@@ -26,8 +26,8 @@ module Robotnik
                     action_condition.call(resource)
                   else
                     deliberation = true
-                    deliberation = deliberation && action_condition[:if].call(resource) if action_condition.has_key?(:if)
-                    deliberation = deliberation && (! action_condition[:unless].call(resource)) if deliberation && action_condition.has_key?(:unless)
+                    deliberation = deliberation && action_condition[:if].to_proc.call(resource) if action_condition.has_key?(:if)
+                    deliberation = deliberation && (! action_condition[:unless].to_proc.call(resource)) if deliberation && action_condition.has_key?(:unless)
                     deliberation
                   end
               end
