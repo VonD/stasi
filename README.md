@@ -5,7 +5,7 @@ A small authorization library inspired by CanCan
 ## Usage
 
 ```ruby
-gem 'kgb'
+gem 'stasi'
 ```
 
 In the model you wish to check permissions on, e.g. User :
@@ -38,4 +38,9 @@ end
 ```
 
 Undefined permissions default to `false`.
-`:admin` and `:guest` must be methods on the `user` object.
+`:admin` and `:guest`, in this example, must be methods on the `user` object.
+
+## Milestones
+
+* pass directly object, and not a symbol
+* load specific permissions from db
