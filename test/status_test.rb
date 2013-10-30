@@ -110,5 +110,11 @@ class StatusTest < ActiveSupport::TestCase
     @status.can :read, :taggable
     assert @status.can? :read, o
   end
+  
+  test "it overrides the matching condition when :as option is present" do
+    @status.can :read, Fixnum
+    refute @status.can? :read, Object.new
+    assert @status.can? :read, Object.new, as: Fixnum
+  end
 
 end

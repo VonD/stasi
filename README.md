@@ -49,6 +49,13 @@ The `can` method takes two arguments : an action name as a symbol, and a resourc
 * a class, eg. `Post`
 * a symbol, eg. `:commentable`. The authorization will be applied if `@post.commentable` returns `true`. This method can take one argument, in which case, the user object will be passed to it.
 
+When checking permission, you can pass an `:as` option to provide the right resource. As the gem in ORM agnostic, this can be useful when checking on a collection :
+
+```ruby
+# if you defined the ability as : can :read, Post
+current_user.can? :read, Post.published, as: Post
+```
+
 Optionnally, the `can` method can take a hash with conditions (hash keys can be `if` and `unless`, values can be Proc. The resource tested will be yielded).
 Finally, the `can` method can take a block, in which case the `can?` method will return the return value of the block. This is useful when defining abilities on collections :
 

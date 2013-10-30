@@ -37,6 +37,7 @@ module Robotnik
         end
         
         def self.matches? rule_condition, resource, options
+          return true if options.has_key?(:as) && options[:as] == rule_condition
           rule_condition = rule_condition.to_proc if rule_condition.respond_to?(:to_proc)
           begin
             rule_condition === resource
