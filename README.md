@@ -42,5 +42,9 @@ Undefined permissions default to `false`.
 
 ## Milestones
 
+* define defaults
+* parse all the statuses so that you can override rules for an object belonging to different statuses
 * pass directly object, and not a symbol
+* pass symbol or proc to `:if` and `:unless` conditions
+* alias actions :manage, :all, :read => [:index, :show], :create => [:new, :create], …
 * load specific permissions from db
