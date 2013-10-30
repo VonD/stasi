@@ -30,7 +30,7 @@ Robotnik::Authorization::Law.define do
   end
   
   status :admin do
-    can :edit, Post, if: Proc.new{ |post| post.editable }
+    can :edit, Post, if: Proc.new{ |post| post.editable? }
     can :destroy, Post
   end
   
@@ -62,6 +62,7 @@ The `cannot` method takes only two arguments : the action name, and the resource
 
 ## Milestones
 
+* pass a class option for collections
 * yield user to blocks and procs in defining abilities
 * pass symbol or proc to `:if` and `:unless` conditions
 * alias actions :manage, :all, :read => [:index, :show], :create => [:new, :create], …
