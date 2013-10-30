@@ -8,7 +8,7 @@ class LawTest < ActiveSupport::TestCase
   
   test "it has rules" do
     rules = @law.send :rules
-    assert_instance_of ActiveSupport::HashWithIndifferentAccess, rules
+    assert_instance_of Hash, rules
   end
   
   test "it initiates rules for role" do
@@ -20,9 +20,9 @@ class LawTest < ActiveSupport::TestCase
   
   test "it yields status for authorization definition" do
     @law.status :admin do
-      can :read, :book
+      can :read, Object
     end
-    assert @law.instance_variable_get('@rules')[:admin].can? :read, :book, nil
+    assert @law.instance_variable_get('@rules')[:admin].can? :read, Object.new
   end
   
   test "it has statuses" do
@@ -32,8 +32,8 @@ class LawTest < ActiveSupport::TestCase
   end
   
   test "it tests status on given object" do
-    object = Object.new
-    class << object
+    user = Object.new
+    class << user
       def admin
         true
       end
@@ -42,13 +42,13 @@ class LawTest < ActiveSupport::TestCase
       end
     end
     @law.status :admin do
-      can :read, :book
+      can :read, Object
     end
     @law.status :not_admin do
-      cannot :read, :book
+      cannot :read, Object
     end
-    assert @law.can? object, :read, :book, nil
-    class << object
+    assert @law.can? :read, Object.new, {agent: user}
+    class << user
       def admin
         false
       end
@@ -56,19 +56,19 @@ class LawTest < ActiveSupport::TestCase
         true    
       end
     end
-    refute @law.can? object, :read, :book, nil
+    refute @law.can? :read, Object.new, {agent: user}
   end
   
   test "it returns false if no status returns true" do
-    object = Object.new
-    class << object
+    user = Object.new
+    class << user
       def admin
         false
       end
     end
     @law.status :admin do
     end
-    refute @law.can? object, :do, :something, nil
+    refute @law.can? :do, :something, {agent: user}
   end
   
   test "it defines a new law at class level" do
@@ -80,8 +80,8 @@ class LawTest < ActiveSupport::TestCase
   end
   
   test "it parses all stauses" do
-    object = Object.new
-    class << object
+    user = Object.new
+    class << user
       def is_a_a
         true
       end
@@ -90,19 +90,19 @@ class LawTest < ActiveSupport::TestCase
       end
     end
     @law.status :is_a_a do
-      can :read, :post
+      can :read, Object
     end
     @law.status :is_a_b do
-      cannot :read, :post
+      cannot :read, Object
     end
-    refute @law.can? object, :read, :post, nil
+    refute @law.can? :read, Object.new, {agent: user}
   end
   
   test "it accepts defaults" do
     @law.default do
-      can :read, :post
+      can :read, Object
     end
-    assert @law.can? Object.new, :read, :post, nil
+    assert @law.can? :read, Object.new, {agent: Object.new}
   end
 
 end

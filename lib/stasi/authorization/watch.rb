@@ -3,7 +3,9 @@ module Robotnik
     module Watch
       
       def can? *args
-        Robotnik::Authorization::Law.law.can? *(args.unshift(self))
+        args[2] ||= {}
+        args[2][:agent] = self
+        Robotnik::Authorization::Law.law.can? *args
       end
       
     end

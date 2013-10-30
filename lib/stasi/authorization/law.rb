@@ -5,8 +5,6 @@ module Robotnik
       #--- Class methods ---#
       
           include Robotnik::DslEval
-          
-          cattr_reader :law
       
           def self.define &block
             @@law = self.new.evaluate(&block)
@@ -16,9 +14,17 @@ module Robotnik
             @@law = nil
           end
           
+          def self.law
+            @@law
+          end
+          
       #--- Instance methods ---#
       
           attr_reader :statuses
+          
+          def initialize
+            @statuses = []
+          end
       
           def status method, &block
             init_role_for(method).evaluate &block
@@ -28,12 +34,11 @@ module Robotnik
             status :default, &block
           end
           
-          def can? *args
-            subject, args = args.shift, args
+          def can? action, resource, options
             verdict = false
             statuses.each do |status|
-              if status == :default || status.to_proc.call(subject)
-                verdict = rules[status].can? *args
+              if status == :default || status.to_proc.call(options[:agent])
+                verdict = rules[status].can? action.to_sym, resource, options
               end
             end
             verdict
@@ -42,12 +47,11 @@ module Robotnik
       private
       
           def rules
-            @rules ||= {}.with_indifferent_access
+            @rules ||= {}
           end
           
           def init_role_for method
             rules[method] ||= begin
-              @statuses ||= []
               @statuses << method
               Robotnik::Authorization::Status.new
             end
