@@ -1,4 +1,4 @@
-# Stasi [![Build Status](https://secure.travis-ci.org/VonD/stasi.png)](http://travis-ci.org/VonD/stasi)
+# Stasi [![Build Status](https://secure.travis-ci.org/VonD/stasi.png)](http://travis-ci.org/VonD/stasi) [<img src="https://codeclimate.com/github/VonD/stasi.png"/>](https://codeclimate.com/github/VonD/stasi)
 
 A small authorization library inspired by CanCan
 
